@@ -41,20 +41,8 @@
       .replace(/\r\n|\r|\n/g, '<br>');
   }
 
-  function getText(url){
-    try {
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.open('GET', url, false);
-      xmlhttp.send(null);
-      if(xmlhttp.status == 200) return xmlhttp.responseText;
-    } catch(e) {
-    }
-    return null;
-  }
-
   var UI = {};
   for(var i in {
-    'implementation': 0,
     'examples': 0,
     'yourSrc': 0,
     'execYourSrc': 0,
@@ -185,10 +173,6 @@
     return !/^\s*$/.test(x);
   });
   
-  var srcCode = getText('./fjs-poc.js');
-  setText(UI.implementation, srcCode ?
-    srcCode : 'Не удаётся загрузить исходный код :(');
-  
   setText(UI.examples, examples.map(function(t, i){
     var res;
     try {
@@ -238,24 +222,19 @@
     });
   }
 
-  var code;
-  if(location.search && (code = getText(location.search.substr(1)))){
-    UI.yourSrc.value = code;
-  } else {
-    UI.yourSrc.value = line(function(){/*
-      // аналогично 'plus = (+)' в Haskell
-      var plus = function(x,y){ return x+y; };
+  UI.yourSrc.value = line(function(){/*
+    // аналогично 'plus = (+)' в Haskell
+    var plus = function(x,y){ return x+y; };
 
-      // бесконечный список чисел Фибоначчи
-      // аналогично 'fibs = 1 : 1 : zipWith plus fibs (tail fibs)' в Haskell
-      var fibs = Cons(1, ConsL(1,
-          function(){ return zipWith(plus, fibs, tail(fibs)); }));
+    // бесконечный список чисел Фибоначчи
+    // аналогично 'fibs = 1 : 1 : zipWith plus fibs (tail fibs)' в Haskell
+    var fibs = Cons(1, ConsL(1,
+        function(){ return zipWith(plus, fibs, tail(fibs)); }));
 
-      print('ten fibs:', take(10, fibs));
+    print('ten fibs:', take(10, fibs));
 
-      // Нажмите Ctrl или Cmd для исполнения кода.
-    */});
-  }
+    // Нажмите Ctrl или Cmd для исполнения кода.
+  */});
 
   UI.execYourSrc.onclick = runCode;
 
