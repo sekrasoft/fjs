@@ -1,22 +1,23 @@
-#Работа с бесконечными списками и ФВП в JS
+# Infinite Lists And Higher-Order Functions For The JavaScript Language
 
-Библиотека [FJS](fjs.js) - это всего один файл,
-который позволит вам легко работать с бесконечными списками
-в Node.js или браузере, поддерживающем ECMAScript 5.
+This library called [FJS](fjs.js) - is just one file that enables you to easily
+use infinite lists in the Node.js or in ECMAScript 5 compartible browsers.
 
-Бесконечные списки здесь реализуются за счёт ленивых конструкторов.
-Из-за отсутствия ленивых вычислений в JavaScript,
-библиотека держится на трёх *китах* - конструкторе списка, конструкторе списка с
-ленивым концом и полностью ленивом конструкторе списка. Отличаются они лишь тем,
-что ленивые конструкторы вместо простых значений принимают на вход функции,
-которые эти значения вычисляют.
-Всё остальное - лишь стандартная реализация знакомых всех функций.
+The infinite lists in FJS are implemented via lazy constructors.
+Of course, there is no lazy evaluation in JavaScript but we may use functions
+that evaluate values instead of values itself to emulate the behaviour required.
+The library uses three types of list constructors: strict one,
+semi-lazy one (a strict head and a lazy tail) and lazy one.
+The library also includes some standard well-known functions like map and foldl.
 
-## Быстрый старт
+*Вы знаете русский язык? Тогда Вы можете не читать этот перевод,
+открыв [**оригинальный текст**](README-RU.md).*
 
-Скачав всего один файл [fjs.js](fjs.js), вы можете начать работу прямо сейчас.
+## Quick Start
 
-### Пример работы в Node.js
+You may download one file [fjs.js](fjs.js), to start use the library just now.
+
+### Example: Node.js
 
     var fjs = require('./fjs.js'), _ = {};
     fjs.$import(_, [ 'list.*', 'list.util.*', 'func.*', 'list.std.*' ]);
@@ -25,7 +26,7 @@
     console.log(String(_.take(10, _.map(function(x){ return x * 2; }, _.nats))));
     console.log(String(_.take(10, _.ConsL(1, _.id1)))); // [1,1,1,1,1,1,1,1,1,1]
 
-### Пример работы в браузере
+### Example: browser
 
     fjs.$import(window, [ 'list.*', 'list.util.*', 'func.*', 'list.std.*' ]);
     
@@ -33,37 +34,38 @@
     alert(String(take(10, map(function(x){ return x * 2; }, nats))));
     alert(String(take(10, ConsL(1, id1)))); // [1,1,1,1,1,1,1,1,1,1]
 
-### Демонстрация возможностей
-[Демонстрация](https://rawgit.com/sekrasoft/fjs/master/index.html) возможностей
-и мини-интерпретатор на одной странице.
+### Demonstration
+A [demonstration](https://rawgit.com/sekrasoft/fjs/master/index.html) and
+online interpreter.
 
-Вы также можете [загрузить](https://github.com/sekrasoft/fjs/archive/master.zip)
-репозиторий и открыть index.html в более-менее современном браузере (IE 9+).
-В демонстрацию встроены автоматические тесты.
+You also can [download](https://github.com/sekrasoft/fjs/archive/master.zip)
+a repository and open index.html in a modern (IE 9+) browser to try and run
+some tests.
 
-## Интерфейс библиотеки
-FJS предоставляет пользователю браузера объект `fjs` (пользователю Node.js - модуль),
-содержащий:
+## Interface
+FJS provides an object `fjs` for a browser user of a module for a Node.js user.
+It contains:
 
-  - объект `stdlib` с нужными функциями и подмодулями
-  - функцию `$import` для удобного импорта функций и подмодулей из `stdlib`
-  - функцию `$export` для удобного экспорта своих объектов
+  - `stdlib` object that contains functions and submodules
+  - `$import` function that offers a convenient way
+    to import FJS functions from the `stdlib` to a user's object
+  - `$export` function for user's objects export
 
 ### fjs.stdlib
-Стандартная библиотека содержит следующие подмодули, функции и значения:
+A standard library contains the following submodules, functions and values:
 
-*Для простоты типы указаны в нотации, близкой к Haskell,
-с точностью до динамической типизации;
-названия функций - тоже из Haskell, если это возможно.*
+*All the types are given in a Haskell-like notation for easy understanding.
+(But sometimes dynamic typing breaks this convention)
+Functions names are Haskell-like too.*
 
-  - `list` - подмодуль работы со списками
-    - `Nil = []` - пустой список
+  - `list` - list submodule
+    - `Nil = []` - an empty list
     - `Cons :: (a, [a]) -> [a]`
-    - `ConsL :: (a, () -> [a]) -> [a]` - конструктор списка с ленивым концом
-    - `ConsLL :: (() -> a), () -> [a]) -> [a]` - ленивый конструктор списка
-    - `List :: Array a -> [a]` - список-прокси для массива
-    - `AList :: Array a -> [a]` - список-копия для массива
-    - `util` - операции над списками
+    - `ConsL :: (a, () -> [a]) -> [a]` - semi-lazy list
+    - `ConsLL :: (() -> a), () -> [a]) -> [a]` - lazy constructor
+    - `List :: Array a -> [a]` - JavaScript Array proxy
+    - `AList :: Array a -> [a]` - copies a JavaScript Array
+    - `util` - list operations
       - `head :: [a] -> a`
       - `tail :: [a] -> [a]`
       - `length :: [a] -> Number`
@@ -73,7 +75,7 @@ FJS предоставляет пользователю браузера объ�
       - `filter :: (a -> Boolean, [a]) -> [a]`
       - `foldr :: ((a,b)->b, b, [a]) -> b`
       - `foldl :: ((b,a)->b, b, [a]) -> b`
-      - `nth :: (Number, [a]) -> a` - n-ый элемент списка
+      - `nth :: (Number, [a]) -> a` - n-th list element
       - `concat1 :: ([a], [a]) -> [a]`
       - `sortBy :: ((a,a) -> Number, [a]) -> [a]`
       - `sort :: [a] -> [a]`
@@ -87,25 +89,25 @@ FJS предоставляет пользователю браузера объ�
       - `zipWith :: ((a,b) -> c, [a], [b]) -> [c]`
       - `permutations :: [a] -> [[a]]`
       - `unique :: [a] -> [a]`
-    - `std` - некоторые стандартные бесконечные списки
-      - `nats` - бесконечный список натуральных чисел
-      - `squares` - бесконечный список квадратов натуральных чисел
-      - `primes` - бесконечный список простых чисел
-      - `ones` - бесконечный список единиц
-  - `func` - прочие функции
+    - `std` - some well-known infinite lists
+      - `nats` - natural numbers
+      - `squares` - squares of natural numbers
+      - `primes` - prime numbers
+      - `ones` - an infinite list of ones
+  - `func` - other useful functions
     - `Const :: a -> b -> a`
     - `id :: a -> a`
-    - `id1 :: () -> Object a` - возвращает `this`
+    - `id1 :: () -> Object a` - returns `this`
     - `$ :: (Function, x) -> Function`
     - `flip :: ((a, b) -> c) -> (b, a) -> c`
     - `compose :: (b -> c, a -> b) -> a -> c`
-    - `field :: String -> Object a -> a` - геттер для поля объекта
+    - `field :: String -> Object a -> a` - object field getter
     - `curry :: ((a, b) -> c) -> a -> b -> c`
     - `iterate :: (a -> a, a) -> [a]`
 
-У каждого списка определены следующие методы:
+All the lists has the following methods:
 
-*Некоторые функции из `list.util` - обёртки над этими методами.*
+*Some functions from the `list.util` are just wrappers on this methods.*
 
   - `head :: () -> a`
   - `tail :: () -> [a]`
@@ -124,76 +126,74 @@ FJS предоставляет пользователю браузера объ�
   - `toString :: () -> String`
   - `toArray :: () -> Array a`
 
-Стоит отметить, что результаты вызова `head` и `tail` **кэшируются** для более
-высокой производительности. Это никак не мешает функциональной частоте,
-но в то же время жёстко карает желающих её нарушить.
+It's important to note that `head` and `tail` call results are **cached**
+to achieve higher perfomance. This does not interfere with the functional
+approach but punishes severely everybody who want to break its rules.
 
-Для применения императивных алгоритмов следует сначала получить
-конкретное JS-значение с помощью `head`, `toString` или `toArray`, с которым
-можно безопасно работать.
+You should get the concrete JS-value via `head`, `toString` or `toArray`
+in order to do anything imperative what you want.
 
 ### fjs.$import
-Функция `fjs.$import` позволяет импортировать нужные сущности
-из `stdlib` в указанный объект.
+The `fjs.$import` functions offers a convenient way  to import FJS functions
+from the `stdlib` to a user's object.
 
-Импорт всей библиотеки:
+Import the whole library:
 
     var m = {};
     fjs.$import(m);
     // m.list.Cons === fjs.stdlib.list.Cons
     
-Импорт одного значения по имени:
+Import one value by name:
 
     var m = {};
     fjs.$import(m, 'list.Cons');
     // m.Cons === fjs.stdlib.list.Cons
     
-Импорт одного значения по имени с изменённым именем:
+Import one value by name with the name specified:
 
     var m = {};
     fjs.$import(m, 'list.Cons:MkList');
     // m.MkList === fjs.stdlib.list.Cons
     
-Импорт множества значений:
+Multiple values import:
 
     var m = {};
     fjs.$import(m, 'list.*');
     // m.Cons === fjs.stdlib.list.Cons
     
-Импорт нескольких значений/групп - перечислением в массиве:
+Import multiple sets of values:
 
     var m = {};
     fjs.$import(m, ['list.*', 'func.$', 'func.permutations:perm', '*']);
 
 ### fjs.$export
-Функция `fjs.$export` позволяет добавить в свой объект свою функцию:
+The `fjs.$export` function allows you to add your value in an object:
 
     var x = 9, m = {};
     fjs.$export(m, 'Math.nine', x);
     fjs.$export(m, 'Math.sqrt', Math.sqrt);
     // m.Math.sqrt(m.Math.nine) === 3
 
-## Примеры работы
-Пока никто не видит, импортируем для удобства рассмотрения примеров все сущности
-из `stdlib` в глобальное пространство имён:
+## Example
+Please close you eyes while I import all the values in the global scope:
 
     fjs.$import(this, [ 'list.*', 'list.util.*', 'func.*', 'list.std.*' ]);
 
-По полному имени обращаться всё ещё можно, но это слишком длинно:
+I cat still use the full names but it's so boring:
 
     fjs.stdlib.list.Cons(1, fjs.stdlib.list.Nil) // [1]
   
-Бесконечный список натуральных чисел:
+An infinite list of the natural numbers:
 
     take(10, nats) // [1,2,3,4,5,6,7,8,9,10]
     nats.take(10) // [1,2,3,4,5,6,7,8,9,10]
     
-Сотое простое число:
+The 100'th prime number:
 
     nth(99, primes) // 541
     primes.nth(99) // 541
     
-Использование разных вариантов конструкторов списка:
+Different ways to construct a list:
 
     Cons(1, Cons(2, Cons(3, Nil))) // [1,2,3]
     ConsL(1, Const(ConsL(2, Const(Cons(3, Nil))))) // [1,2,3]
@@ -201,18 +201,18 @@ FJS предоставляет пользователю браузера объ�
     ConsL(1, function(){ return Nil; }) // [1]
     ConsLL(function(){ return 1; }, function(){ return Nil; }) // [1]
     
-Создание списков из массивов, массивов из списков:
+Conversion between lists and JS-arrays:
 
-    // Создание списка-копии массива (если исходный массив мал или будет меняться)
+    // Creating of array copy (useful when the source array is short or will not be changed
     AList([1,2,3]) // [1,2,3]
     
-    // Создание списка-прокси для массива (если исходный массив не будет меняться)
+    // Creating of array proxy (useful when the source array will not be changed)
     List([1,2,3]) // [1,2,3]
     
-    // Преобразование списка в JS-массив
+    // Conversion to the JS-array
     take(5, nats).toArray() // [1,2,3,4,5]
     
-Благодаря утиной типизации, List/AList может проксировать строки и другие объекты:
+List/AList can be used with strings or other array-like objects because of duck typing:
 
     List('hello') // ['h','e','l','l','o']
     join("", unique(List("Hello world"))) // 'wroledH'
@@ -222,20 +222,20 @@ FJS предоставляет пользователю браузера объ�
     }
     fun(1,2,3,4) // [1,2,3,4]
     
-Голова и хвост списка:
+Head and tail:
 
     head(List([1,2,3])) // 1
     tail(List([1,2,3])) // [2,3]
     tail(tail(List([1,2,3]))) // [3]
     head(tail(tail(List([1,2,3])))) // 3
     
-Преобразования списка:
+Transformations:
 
     map(function(x){ return x+1; }, take(5, nats)) // [2,3,4,5,6]
     filter(function(x){ return x%2; }, take(5, nats)) // [1,3,5]
     shift(take(5, nats)) // [2,3,4,5,1]
 
-Не стоит смешивать функционально чистые списки со своей грязной императивностью:
+You should not mix pure functional lists with your ugly imperativeness:
 
     var log = function(x) {
       console.log(x);
@@ -244,23 +244,23 @@ FJS предоставляет пользователю браузера объ�
     
     var xs = take(5, nats);
     
-    // Не надо так! Ничего не выведется, т.к. map (пока) полностью ленивый
+    // Please, stop it! Nothing will be printed because map function is lazy (for now)
     var printed = xs.map(log);
     
-    var x = head(printed); // только сейчас выведется "1"; x будет 11
-    var y = head(printed); // ничего не выведется,
-      // т.к. head(printed) уже закэшировано; y будет 11
+    var x = head(printed); // you get some output only now; x is 11
+    var y = head(printed); // head(printed) is cached so
+      // nothing is printed; y is 11
     
-    // Вернёмся в императивный мир - только тогда можно пакостить:
-    var numbers = xs.toArray(); // JS-массив, которым можно повелевать
-    var printed = numbers.map(log); // всё хорошо
+    // You should come back to your imperative world to continue:
+    var numbers = xs.toArray(); // JS-array that waits for your actions
+    var printed = numbers.map(log); // all right
     
-Сортировка и уникальные элементы:
+Sorting and unique sets:
 
     sort(List([3,8,2,1])) // [1,2,3,8]
     unique(List([1,2,1,3,2,2])) // [3,2,1]
 
-Предикаты и свёртки:
+Predicates and folds:
 
     var xs = take(5, nats);
     any(function(x){ return x > 3; }, xs) // true
@@ -269,26 +269,26 @@ FJS предоставляет пользователю браузера объ�
     product(xs) // 120
     sum(xs) // 15
 
-Разворот и клонирование через свёртки:
+Reverse and clone lists via folds:
 
     var reverse = $($(foldl, flip(Cons)), Nil), clone = curry(foldr)(Cons)(Nil);
     reverse(take(5, nats)) // [5,4,3,2,1]
     clone(take(5, nats)) // [1,2,3,4,5]
 
-Благодаря динамической типизации можно делать то, что нельзя в Haskell:
+Due to dynamic typing you can do something that is denied in Haskell:
 
     take(5, iterate($(flip(Cons), Nil), Nil)) // [[],[[]],[[[]]],[[[[]]]],[[[[[]]]]]]
 
-Все перестановки первых трёх простых чисел:
+All the permutations of the the first prime numbers:
 
     permutations(take(3, primes)) // [[2,3,5],[2,5,3],[3,5,2],[3,2,5],[5,2,3],[5,3,2]]
 
-Функция iterate:
+Iterate function:
 
     var mul2 = function(x){ return 2 * x; };
     take(10, iterate(mul2, 2)) // [2,4,8,16,32,64,128,256,512,1024]
 
-Создание своих бесконечных списков:
+Your own infinite lists:
 
     // Список единиц: ones = 1 : ones
     var ones = ConsL(1, function(){ return ones; });
@@ -318,7 +318,7 @@ FJS предоставляет пользователю браузера объ�
       function(){ return zipWith(plus, fibs, tail(fibs)); }));
     take(10, fibs) // [1,1,2,3,5,8,13,21,34,55]
 
-Работа с полями объектов:
+Field getters:
 
     map(field("x"), List([
       {x: 3},
