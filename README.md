@@ -23,7 +23,7 @@
     
     console.log(String(_.take(10, _.nats))); // [1,2,3,4,5,6,7,8,9,10]
     console.log(String(_.take(10, _.map(function(x){ return x * 2; }, _.nats))));
-    console.log(String(_.take(10, _.ConsL(1, id1)))); // [1,1,1,1,1,1,1,1,1,1]
+    console.log(String(_.take(10, _.ConsL(1, _.id1)))); // [1,1,1,1,1,1,1,1,1,1]
 
 ### Пример работы в браузере
 
