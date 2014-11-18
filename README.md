@@ -290,29 +290,30 @@ Iterate function:
 
 Your own infinite lists:
 
-    // Список единиц: ones = 1 : ones
+    // List of ones: ones = 1 : ones
     var ones = ConsL(1, function(){ return ones; });
     take(10, ones) // [1,1,1,1,1,1,1,1,1,1]
 
-    // небольшой подарок от JavaScript позволяет записать список единиц короче
-    // id1 возвращает this. поскольку tail - метод списка, id1 его и возвратит
+    // JavaScript provides a wonderful opportunity to shorter the code
+    // id1 returns 'this'. tail - is a list method so id1 returns the list
     var ones = ConsL(1, id1);
     take(10, ones) // [1,1,1,1,1,1,1,1,1,1]
     
-    // Нечётные числа: odds = 1 : map (+1) odds
+    // Odd numbers: odds = 1 : map (+2) odds
     var odds = ConsL(1, function(){
       return odds.map(function(x){ return x + 2; });
     });
     take(10, odds) // [1,3,5,7,9,11,13,15,17,19]
 
-    // Для получения хвоста вызовется метод `tail` (реализацию его передаём в ConsL),
-    // `this` для которого - текущий элемент списка, у которого мы можем посчитать голову
+    // A 'tail' method will called in order to evaluate the tail
+    // (it's implementation is passed to 'ConsL'),
+    // 'this' for 'tail' is the current list element that head may be got
     var odds = ConsL(1, function next(){
       return ConsL(this.head() + 2, next);
     });
     take(10, odds) // [1,3,5,7,9,11,13,15,17,19]
     
-    // Числа Фибоначчи: fibs = 1 : 1 : zipWith (+) fibs (tail fibs)
+    // Fibonacci numbers: fibs = 1 : 1 : zipWith (+) fibs (tail fibs)
     var plus = function(x,y){ return x+y; },
     fibs = Cons(1, ConsL(1,
       function(){ return zipWith(plus, fibs, tail(fibs)); }));
