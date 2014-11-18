@@ -1,0 +1,62 @@
+﻿<html>
+  <head>
+    <title>Functional JavaScript</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="compat.js"></script>
+    <script src="fjs.js"></script>
+    <script>
+      fjs.$import(window, [
+        'list.*',
+        'list.util.*',
+        'func.*',
+        'list.std.*',
+      ]);
+    </script>
+    <script src="test.js"></script>
+    <style>
+      #container { display: none; }
+      #yourSrc, #yourOutput { min-width: 100%; height: 200px; }
+    </style>
+  </head>
+  <body>
+    <h1>Работа с бесконечными списками и ФВП в JS</h1>
+    <noscript>
+      Странно, что Вы отключили JavaScript
+        и собираетесь работать с бесконечными списками.<br/>
+      Посмотрите тогда <a href="fjs.js">исходники</a>, что-ли...<br/>
+      Также есть <a href="fjs-poc.js">реализация</a> в функциональном стиле.
+    </noscript>
+    <div id="container">
+      <table width="100%" border="0">
+        <tr>
+          <th>Код для выполения</th>
+          <th>Результат</th>
+        </tr>
+        <tr valign="top">
+          <td width="50%">
+            <textarea
+              rows="10"
+              id="yourSrc" autocomplete="off"
+              placeholder="Нажмите Ctrl или Cmd для выполнения"
+            ></textarea>
+          </td>
+          <td width="50%">
+            <textarea rows="10" id="yourOutput" readonly></textarea>
+          </td>
+        </tr>
+      </table>
+      <input type="button" value="Выполнить" id="execYourSrc" />
+      <input type="button" value="Очистить" id="cleanYourSrc" />
+      <h2 id="examplesTitle">Примеры</h2>
+      <pre id="examples"></pre>
+      <h2>Загрузить исходный код</h2>
+        <a href="fjs-poc.js">Реализация-демонстрация</a>
+          в функциональном стиле.<br/>
+        Быстрая (относительно функциональной)
+          <a href="fjs.js">реализация</a> в императивном стиле.
+      <h2>Вариант реализации в функциональном стиле</h2>
+      <pre id="implementation"></pre>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
