@@ -164,7 +164,7 @@ Multiple values import:
 Import multiple sets of values:
 
     var m = {};
-    fjs.$import(m, ['list.*', 'func.$', 'func.permutations:perm', '*']);
+    fjs.$import(m, ['list.*', 'func.$', 'list.util.permutations:perm', '*']);
 
 ### fjs.$export
 The `fjs.$export` function allows you to add your value in an object:
