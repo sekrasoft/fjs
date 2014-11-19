@@ -429,21 +429,30 @@ function setFieldAs(to, from, query){
   to[name] = getField(from, path);
 }
 
-function $import(object, what){
+function $import(object, what, _from){
+  var from;
+  if(typeof _from === 'object' && _from) from = _from;
+  else from = stdlib;
+
   if(what instanceof Array){
     for(var i=0; i<what.length; ++i)
-      setFieldAs(object, stdlib, what[i]);
+      setFieldAs(object, from, what[i]);
     return;
   }
   
   if(typeof what === 'string'){
-    setFieldAs(object, stdlib, what);
+    setFieldAs(object, from, what);
     return;
   }
   
-  for(var name in stdlib)
-    if(has(stdlib, name))
-      object[name] = stdlib[name];
+  if(typeof _from === 'undefined' && typeof what === 'object' && what){
+    from = what;
+    what = void 0;
+  }
+
+  for(var name in from)
+    if(has(from, name))
+      object[name] = from[name];
 }
 
 function $export(object, name, module){

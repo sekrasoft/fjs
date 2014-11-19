@@ -42,6 +42,18 @@
     var _ = {};
     fjs.$import(_, ['list.std.*']);
     _.primes.nth(5) === 13
+    
+    var _ = {}, x = {list: 5};
+    fjs.$import(_, x);
+    _.list === 5
+    
+    var _ = {}, x = {list: 5};
+    fjs.$import(_, 'list', x);
+    _.list === 5
+    
+    var _ = {}, x = {list: 5};
+    fjs.$import(_, ['list'], x);
+    _.list === 5
   
     head(o) === 1
     

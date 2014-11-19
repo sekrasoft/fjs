@@ -166,6 +166,13 @@ Import multiple sets of values:
     var m = {};
     fjs.$import(m, ['list.*', 'func.$', 'list.util.permutations:perm', '*']);
 
+You can use `fjs.$import` with your submodules (objects) as sources:
+
+    var m = {}, obj = {x: 3, y: 5};
+    fjs.$import(m, 'x', obj); // m.x === 3
+    fjs.$import(m, ['x', 'y:z'], obj); // m.x === 3, m.z === 5
+    fjs.$import(m, obj); // m.x === 3, m.y === 5;
+
 ### fjs.$export
 The `fjs.$export` function allows you to add your value in an object:
 
