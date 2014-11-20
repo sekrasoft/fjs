@@ -314,7 +314,7 @@ Due to dynamic typing you can do something that is denied in Haskell:
 
 <a name="operators"></a>A convenient operators ans lambdas notation:
 
-*Warning: the following functions use **eval**.
+*Warning: the following functions use <b>eval</b>.
 You should use ordinary JS-functions instead of this functions to
 achieve security and perfomance.*
 
