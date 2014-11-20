@@ -466,13 +466,11 @@ function $export(object, name, module){
 (function(){
 
   var _ = {};
-  $import(_, ['list.ConsL', 'func.id1', 'func.$']);
+  $import(_, ['list.ConsL', 'func.id1', 'func.$', 'func.iterate']);
   
   /// Бесконечный список натуральных чисел:
-  // nats = 1 : map (+1) nats
-  var nats = _.ConsL(1, function() {
-    return nats.map(function(x){ return x + 1; });
-  });
+  // nats = iterate (+1) 1
+  var nats = _.iterate(function(x){ return x + 1; }, 1);
 
   /// Бесконечный список квадратов натуральных чисел:
   // squares = map (\x -> x*x) nats
