@@ -133,6 +133,15 @@
     join("", unique(List("Hello world")))
     
     take(1, filter(function(x){ return x < 2; }, nats))
+
+    // удобная запись операторов и лямбд (внимание: использует eval!)
+    // binary('+')  <=> function(x,y){ return x+y; }
+    // binary('2+') <=> function(x)  { return 2+x; }
+    // binary('+2') <=> function(x)  { return x+2; }
+    // unary('-')   <=> function(x)  { return - x; }
+    // lambda('x,y -> x+y') <=> function(x,y){ return x+y; }
+    binary('.x')({x: 3}) === 3,
+    take(5, map(binary('*2'), nats))
     
     // функция iterate
     var mul2 = function(x){ return 2 * x; };

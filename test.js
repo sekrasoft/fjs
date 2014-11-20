@@ -201,6 +201,38 @@
     
     '[1,1,2,1,2,3,1,2,3,4]' === String(take(10, concat( map($(flip(take), nats), nats) )))
     
+    unary('-')(1) === -1
+    
+    unary('--')(1) === 0
+    
+    unary('   - ')(1) === -1
+    
+    binary('-')(8,5) === 3
+    
+    binary(' - ')(8,5) === 3
+    
+    binary('-5')(8) === 3
+    
+    binary(' - 5 ')(8) === 3
+    
+    binary('8-')(5) === 3
+    
+    binary(' 8 - ')(5) === 3
+    
+    binary('8-5') === 3
+    
+    binary(' 8 - 5 ') === 3
+    
+    binary('.x')({x: 3}) === 3
+    
+    lambda('x->x*x')(3) === 9
+    
+    lambda(' x -> x*x ')(3) === 9
+    
+    lambda('x,y->x+y')(3, 4) === 7
+    
+    lambda(' x , y -> x + y ')(3, 4) === 7
+    
   */}).split(/(\r\n|\r|\n){2,}/).filter(function(x){
     return !/^\s*$/.test(x);
   }).forEach(function(code, i){

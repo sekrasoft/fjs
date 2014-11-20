@@ -108,6 +108,11 @@ Functions names are Haskell-like too.*
     - `field :: String -> Object a -> a` - object field getter
     - `curry :: ((a, b) -> c) -> a -> b -> c`
     - `iterate :: (a -> a, a) -> [a]`
+    - `operators` - a convenient operators and lambdas notation
+        (see [operators](#operators))
+      - `binary :: String -> (a -> a -> b) | (a -> b) | b`
+      - `unary :: String -> (a -> b) | b`
+      - `lambda :: String -> Function`
 
 All the lists has the following methods:
 
@@ -306,6 +311,36 @@ Reverse and clone lists via folds:
 Due to dynamic typing you can do something that is denied in Haskell:
 
     take(5, iterate($(flip(Cons), Nil), Nil)) // [[],[[]],[[[]]],[[[[]]]],[[[[[]]]]]]
+
+<a name="operators"></a>A convenient operators ans lambdas notation:
+
+*Warning: the following functions use **eval**.
+You should use ordinary JS-functions instead of this functions to
+achieve security and perfomance.*
+
+    fjs.$import(this, [
+      'func.operators.unary:un',
+      'func.operators.binary:bin',
+      'func.operators.lambda' ]);
+      
+    // Unary operators: '++', '--', '+', '-', '!', '~'
+    un('-')(1) // -1
+    
+    // Binary operations: '+', '-', '*', '/', '%', ',', '&&', '||',
+    // '===', '!==', '==', '!=', '>>>', '>>',
+    // '<<', '>=', '>', '<=', '<', '&', '|', '^', '.'
+    bin('-')(8, 5) // 3
+    bin('8-')(5) // 3
+    bin('-5')(8) // 3
+    
+    bin('.x')({x: 3}) // 3
+    
+    // Lambdas
+    lambda('x -> x*x')(2) // 4
+    lambda('x,y -> x+y')(2, 5) // 7
+    
+    // Usage
+    map(bin('+1'), List([1,2,3])) // [2,3,4]
 
 All the permutations of the the first prime numbers:
 

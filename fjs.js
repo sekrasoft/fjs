@@ -1,4 +1,5 @@
 ﻿(function(){
+'use strict';
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Базовый класс списка
@@ -498,6 +499,57 @@ function $export(object, name, module){
   $export(stdlib, 'list.std.squares', _.Seq(function(x){ return x*x; }, 1));
   $export(stdlib, 'list.std.primes', primes);
   $export(stdlib, 'list.std.ones', _.ConsL(1, _.id1));
+
+})();
+
+////////////////////////////////////////////////////////////////////////////////
+// Удобная запись операторов и лямбд
+
+(function(){
+
+  var binOp = '(\\+|\\-|\\*|\\/|%|,|&&|\\|\\|' +
+    '|===|!==|==|!=|>>>|>>|<<|>=|>|<=|<|&|\\||^|\\.)';
+  var unOp = '(\\+\\+|\\-\\-|\\+|\\-|!|~)';
+  var spc = '\\s*';
+  var any = '([^+\\-*/%,&|=!<>.~^]*)';
+
+  function isSpace(str){ return /^\s*$/.test(str); }
+
+  var binOpRegExp = new RegExp('^' + any + binOp + any + '$');
+  var unOpRegExp = new RegExp('^' + spc + unOp + any + '$');
+  var lambdaRegExp = /^([a-z0-9$_,\s]+)\->(.+)$/;
+
+  function binary(str){
+    var m = binOpRegExp.exec(str);
+    if(!m) return;
+    var left = m[1], op = m[2], right = m[3];
+    var ls = isSpace(left), rs = isSpace(right);
+    
+    if(ls && rs) return new Function('x', 'y', 'return x ' + op + ' y;');
+    if(ls) return new Function('x', 'return x ' + op + ' ' + right + ';');
+    if(rs) return new Function('x', 'return ' + left + ' ' + op + ' x;');
+    return eval(str);
+  }
+
+  function unary(str){
+    var m = unOpRegExp.exec(str);
+    if(!m) return;
+    var op = m[1], right = m[2];
+    
+    if(isSpace(right)) return new Function('x', 'return ' + op + ' x;');
+    return eval(str);
+  }
+
+  function lambda(str){
+    var m = lambdaRegExp.exec(str);
+    if(!m) return;
+    var args = m[1], body = m[2];
+    return eval('(function(' + args + '){ return ' + body + '; })');
+  }
+
+  $export(stdlib, 'func.operators.unary', unary);
+  $export(stdlib, 'func.operators.binary', binary);
+  $export(stdlib, 'func.operators.lambda', lambda);
 
 })();
 
