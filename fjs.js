@@ -364,7 +364,7 @@ var stdlib = {
       'shift': shift,
       'zipWith': zipWith,
       'permutations': permutations,
-      'unique': unique,
+      'unique': unique
     }
   },
   
@@ -378,8 +378,8 @@ var stdlib = {
     'field': function field(name){ return function(x){ return x[name]; }; },
     'curry': curry,
 
-    'iterate': iterate,
-  },
+    'iterate': iterate
+  }
   
 };
 
