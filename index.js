@@ -236,13 +236,10 @@
   }
 
   UI.yourSrc.value = line(function(){/*
-    // аналогично 'plus = (+)' в Haskell
-    var plus = function(x,y){ return x+y; };
-
     // бесконечный список чисел Фибоначчи
-    // аналогично 'fibs = 1 : 1 : zipWith plus fibs (tail fibs)' в Haskell
+    // аналогично 'fibs = 1 : 1 : zipWith (+) fibs (tail fibs)' в Haskell
     var fibs = Cons(1, ConsL(1,
-        function(){ return zipWith(plus, fibs, tail(fibs)); }));
+        function(){ return zipWith(binary('+'), fibs, tail(fibs)); }));
 
     print('ten fibs:', take(10, fibs));
 
