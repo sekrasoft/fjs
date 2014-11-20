@@ -27,11 +27,14 @@
 
 ### Пример работы в браузере
 
+    <script src="fjs.js"></script>
+    <script>
     fjs.$import(window, [ 'list.*', 'list.util.*', 'func.*', 'list.std.*' ]);
     
     alert(String(take(10, nats))); // [1,2,3,4,5,6,7,8,9,10]
     alert(String(take(10, map(function(x){ return x * 2; }, nats))));
     alert(String(take(10, ConsL(1, id1)))); // [1,1,1,1,1,1,1,1,1,1]
+    </script>
 
 ### Демонстрация возможностей
 [Демонстрация](https://rawgit.com/sekrasoft/fjs/master/index.html) возможностей
