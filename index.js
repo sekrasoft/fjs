@@ -134,6 +134,14 @@
     
     take(1, filter(function(x){ return x < 2; }, nats))
     
+    // функция iterate
+    var mul2 = function(x){ return 2 * x; };
+    take(10, iterate(mul2, 2))
+    
+    // Seq - список из функции
+    var squares = Seq(function(x){ return x*x; }, 1);
+    take(5, squares);
+    
     // Привет, динамическая типизация:
     take(5, iterate($(flip(Cons), Nil), Nil))
     
@@ -147,10 +155,6 @@
     
     // все перестановки первых трёх простых чисел
     "\n" + join("\n", permutations(take(3, primes)))
-    
-    // функция iterate
-    var mul2 = function(x){ return 2 * x; };
-    take(10, iterate(mul2, 2))
     
     // работа с бесконечным списком единиц
     var ones = ConsL(1, function(){ return ones; });

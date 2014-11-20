@@ -68,6 +68,7 @@ Functions names are Haskell-like too.*
     - `ConsLL :: (() -> a), () -> [a]) -> [a]` - lazy constructor
     - `List :: Array a -> [a]` - JavaScript Array proxy
     - `AList :: Array a -> [a]` - copies a JavaScript Array
+    - `Seq :: (Int -> a, Int) -> [a]` - creates list-like sequence [f(n), f(n+1), f(n+2), ...]
     - `util` - list operations
       - `head :: [a] -> a`
       - `tail :: [a] -> [a]`
@@ -221,6 +222,23 @@ Conversion between lists and JS-arrays:
     
     // Conversion to the JS-array
     take(5, nats).toArray() // [1,2,3,4,5]
+
+Sequences (see [infinite lists](#own_infinite_lists)):
+
+*Sequences do not cache its tails and also may save you from stack overflow
+if you define it via `map` on itself.*
+
+    // Sequence of ones
+    var ones = Seq(Const(1), 1);
+    take(10, ones) // [1,1,1,1,1,1,1,1,1,1]
+
+    // Odd numbers
+    var odds = Seq(function(x){ return x * 2 + 1; }, 0);
+    take(10, odds) // [1,3,5,7,9,11,13,15,17,19]
+    
+    // Squares
+    var squares = Seq(function(x){ return x * x; }, 1);
+    take(10, squares) // [1,4,9,16,25,36,49,64,81,100]
     
 List/AList can be used with strings or other array-like objects because of duck typing:
 
@@ -298,7 +316,7 @@ Iterate function:
     var mul2 = function(x){ return 2 * x; };
     take(10, iterate(mul2, 2)) // [2,4,8,16,32,64,128,256,512,1024]
 
-Your own infinite lists:
+<a name="own_infinite_lists"></a>Your own infinite lists:
 
     // List of ones: ones = 1 : ones
     var ones = ConsL(1, function(){ return ones; });
@@ -329,6 +347,10 @@ Your own infinite lists:
       function(){ return zipWith(plus, fibs, tail(fibs)); }));
     take(10, fibs) // [1,1,2,3,5,8,13,21,34,55]
 
+    // Squares: squares = map (\x -> x*x) nats
+    var squares = map(function(x){ return x * x; }, nats);
+    take(10, squares) // [1,4,9,16,25,36,49,64,81,100]
+    
 Field getters:
 
     map(field("x"), List([

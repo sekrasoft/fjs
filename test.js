@@ -155,6 +155,10 @@
     
     String(take(3, iterate(function(x){ return x*2; }, 1))) === '[1,2,4]'
     
+    String(take(3, Seq(function(x){ return x*2; }, 1))) === '[2,4,6]'
+    
+    String(take(3, Seq(function(x){ return x*2; }, 10))) === '[20,22,24]'
+    
     String(shift(AList([1,2,3]))) === '[2,3,1]'
     
     shift(Nil) === Nil

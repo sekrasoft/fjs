@@ -212,6 +212,21 @@ ArrayProxy.prototype.tail = function() {
   return new ArrayProxy(this.data, this.from + 1);
 };
 
+/// Последовательность как обёртка над функцией: ((Int -> a), Int) -> [a]
+function Sequence(func, from){
+  this.func = func;
+  this.from = from | 0;
+  this.value_ = undefined;
+}
+
+Sequence.prototype = Object.create(ListBase.prototype);
+Sequence.prototype.head = function() {
+  return this.value_ === undefined ? this.value_ = this.func(this.from) : this.value_;
+};
+Sequence.prototype.tail = function() {
+  return new Sequence(this.func, this.from + 1);
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // Основные функции и значения
 
@@ -319,6 +334,7 @@ var stdlib = {
     'Cons': function Cons(x, y){ return new List(x, y); },
     'ConsL': function ConsL(x, y){ return new LazyList1(x, y); },
     'ConsLL': function ConsLL(x, y){ return new LazyList(x, y); },
+    'Seq': function Seq(f, from){ return new Sequence(f, from); },
     
     'List': function AList(arr){ return new ArrayProxy(arr, 0); },
     'AList': arrayToList,
@@ -466,26 +482,20 @@ function $export(object, name, module){
 (function(){
 
   var _ = {};
-  $import(_, ['list.ConsL', 'func.id1', 'func.$', 'func.iterate']);
+  $import(_, ['list.ConsL', 'func.id1', 'func.id', 'func.$', 'list.Seq']);
   
-  /// Бесконечный список натуральных чисел:
-  // nats = iterate (+1) 1
-  var nats = _.iterate(function(x){ return x + 1; }, 1);
-
-  /// Бесконечный список квадратов натуральных чисел:
-  // squares = map (\x -> x*x) nats
-  var squares = nats.map(function(x){ return x*x; });
-
   /// Бесконечный список простых чисел
   // http://en.literateprograms.org/Sieve_of_Eratosthenes_%28Haskell%29
   var primes = (function sieve(xs){
     function ok(x){ return x % p > 0; }
     var p = xs.head();
     return _.ConsL(p, _.$(sieve, xs.tail().filter(ok)));
-  })(nats.tail());
+  })(_.Seq(_.id, 2));
   
-  $export(stdlib, 'list.std.nats', nats);
-  $export(stdlib, 'list.std.squares', squares);
+  // Бесконечный список натуральных чисел
+  $export(stdlib, 'list.std.nats', _.Seq(_.id, 1));
+  // Бесконечный список квадратов натуральных чисел:
+  $export(stdlib, 'list.std.squares', _.Seq(function(x){ return x*x; }, 1));
   $export(stdlib, 'list.std.primes', primes);
   $export(stdlib, 'list.std.ones', _.ConsL(1, _.id1));
 
