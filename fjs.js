@@ -130,6 +130,22 @@ ListBase.prototype.foldl = function foldl(f, val){
   return res;
 };
 
+ListBase.prototype.scanl = function scanl(f, val){
+  var list = this;
+  return new LazyList1(val, function(){
+    return list.tail().scanl(f, f(val, list.head()));
+  });
+};
+
+ListBase.prototype.scanr = function scanl(f, val){
+  var s = this.toArray(), res = new List(val, Nil);
+  for(var i=s.length-1; i>=0; --i){
+    val = f(s[i], val);
+    res = new List(val, res);
+  }
+  return res;
+};
+
 ListBase.prototype.nth = function nth(n){
   var t = this;
   do{
@@ -205,6 +221,8 @@ EmptyList.prototype.map = function(f){ return this; };
 EmptyList.prototype.filter = function(f){ return this; };
 EmptyList.prototype.foldr = function(f, val){ return val; };
 EmptyList.prototype.foldl = function(f, val){ return val; };
+EmptyList.prototype.scanl = function(f, val){ return new List(val, this); };
+EmptyList.prototype.scanr = function(f, val){ return new List(val, this); };
 EmptyList.prototype.nth = function(n){};
 EmptyList.prototype.concat = function(ys){ return ys; };
 EmptyList.prototype.sortBy = function(f){ return this; };
@@ -334,6 +352,19 @@ function foldr1(f, list){
   
   var res = s[s.length - 1];
   for(var i=s.length - 2; i>=0; --i) res = f(s[i], res);
+  return res;
+}
+
+function scanl1(f, list){
+  return list.tail().scanl(f, list.head());
+}
+
+function scanr1(f, list){
+  var s = list.toArray(), val = s[s.length - 1], res = new List(val, Nil);
+  for(var i=s.length - 2; i>=0; --i){
+    val = f(s[i], val);
+    res = new List(val, res);
+  }
   return res;
 }
 
@@ -504,6 +535,8 @@ var stdlib = {
       'filter': function(f, list){ return list.filter(f); },
       'foldr': function(f, val, list){ return list.foldr(f, val); },
       'foldl': function(f, val, list){ return list.foldl(f, val); },
+      'scanr': function(f, val, list){ return list.scanr(f, val); },
+      'scanl': function(f, val, list){ return list.scanl(f, val); },
       'nth': function(n, list){ return list.nth(n); },
       'concat1': function(xs, ys){ return xs.concat(ys); },
       'sortBy': function(f, list){ return list.sortBy(f); },
@@ -512,6 +545,8 @@ var stdlib = {
       
       'foldl1': foldl1,
       'foldr1': foldr1,
+      'scanl1': scanl1,
+      'scanr1': scanr1,
       'concatMap': concatMap,
       
       'elem': elem,

@@ -86,6 +86,8 @@ Functions names are Haskell-like too where it is possible.
       - `filter :: (a -> Boolean, [a]) -> [a]`
       - `foldr :: ((a,b)->b, b, [a]) -> b`
       - `foldl :: ((b,a)->b, b, [a]) -> b`
+      - `scanl :: ((b,a) -> b, b, [a]) -> [b]`
+      - `scanr :: ((a,b) -> b, b, [a]) -> [b]`
       - `nth :: (Number, [a]) -> a` - n-th list element
       - `concat1 :: ([a], [a]) -> [a]`
       - `sortBy :: ((a,a) -> Number, [a]) -> [a]`
@@ -110,6 +112,8 @@ Functions names are Haskell-like too where it is possible.
       - `or  :: [Boolean] -> Boolean`
       - `foldl1 :: (((a, a) -> a), [a]) -> a`
       - `foldr1 :: (((a, a) -> a), [a]) -> a`
+      - `scanl1 :: ((a,a) -> a, [a]) -> [a]`
+      - `scanr1 :: ((a,a) -> a, [a]) -> [a]`
       - `concatMap :: ((a -> [b]), [a]) -> [b]`
       
     - `std` - some well-known infinite lists
@@ -153,6 +157,8 @@ All the lists has the following methods:
   - `filter :: (a -> Boolean) -> [a]`
   - `foldr :: ((a,b)->b, b) -> b`
   - `foldl :: ((b,a)->b, b) -> b`
+  - `scanl :: ((b,a) -> b, b) -> [b]`
+  - `scanr :: ((a,b) -> b, b) -> [b]`
   - `nth :: Number -> a`
   - `concat :: [a] -> [a]`
   - `sortBy :: ((a,a) -> Number) -> [a]`

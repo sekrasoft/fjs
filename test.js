@@ -188,6 +188,18 @@
     
     foldr(function(){}, 5, Nil) === 5
     
+    String(scanl(function(){}, 5, Nil)) === '[5]'
+    
+    String(scanr(function(){}, 5, Nil)) === '[5]'
+    
+    String(scanl(function(x, y){ return x-y; }, 5, List([1,2,3]))) === '[5,4,2,-1]'
+    
+    String(scanr(function(x, y){ return y-x; }, 5, List([1,2,3]))) === '[-1,0,2,5]'
+    
+    String(scanl1(function(x, y){ return x-y; }, List([5,1,2,3]))) === '[5,4,2,-1]'
+    
+    String(scanr1(function(x, y){ return y-x; }, List([1,2,3,5]))) === '[-1,0,2,5]'
+    
     any(function(x){ return x > 2; }, AList([1,2,3])) === true
     
     all(function(x){ return x > 2; }, AList([1,2,3])) === false
