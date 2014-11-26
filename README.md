@@ -74,7 +74,7 @@ Functions names are Haskell-like too.*
       - `tail :: [a] -> [a]`
       - `length :: [a] -> Number`
       - `reverse :: [a] -> [a]`
-      - `take :: (Number, [a]) -> a`
+      - `take :: (Number, [a]) -> [a]`
       - `map :: (a -> b, [a]) -> [b]`
       - `filter :: (a -> Boolean, [a]) -> [a]`
       - `foldr :: ((a,b)->b, b, [a]) -> b`
@@ -122,7 +122,7 @@ All the lists has the following methods:
   - `tail :: () -> [a]`
   - `length :: () -> Number`
   - `reverse :: () -> [a]`
-  - `take :: Number -> a`
+  - `take :: Number -> [a]`
   - `map :: (a -> b) -> [b]`
   - `filter :: (a -> Boolean) -> [a]`
   - `foldr :: ((a,b)->b, b) -> b`
