@@ -87,6 +87,50 @@
     
     head(tail(ConsL(1, Const(ConsL(2, Const(Nil)))))) === 2
     
+    last(List([1,2,3])) === 3
+    
+    last(List([3])) === 3
+    
+    String(init(List([1,2,3]))) === '[1,2]'
+    
+    isEmpty(Nil) === true
+    
+    isEmpty(List([1])) === false
+    
+    init(List([3])) === Nil
+    
+    String(take(5, repeat(4))) === '[4,4,4,4,4]'
+    
+    String(replicate(5, 4)) === '[4,4,4,4,4]'
+    
+    replicate(0, 3) === Nil
+    
+    List([1,2,3]).indexOf(3) === 2
+    
+    List([1,2,3]).indexOf(4) === -1
+    
+    Nil.indexOf(4) === -1
+    
+    elem(5, List([1,2,3])) === false
+    
+    elem(3, List([1,2,3])) === true
+    
+    notElem(5, List([1,2,3])) === true
+    
+    notElem(3, List([1,2,3])) === false
+    
+    maximum(List([2,8,3])) === 8
+    
+    minimum(List([2,8,3])) === 2
+    
+    and(List([true, false])) === false
+    
+    and(List([true, true])) === true
+    
+    or(List([true, false])) === true
+    
+    or(List([false, false])) === false
+    
     $(function(x,y){ return x+y; }, 5)(6) === 11
     
     flip(function(x,y){ return x-y; })(2,3) === 1
@@ -107,15 +151,25 @@
     
     product(Nil) === 1
     
-    take(0, Nil) === Nil
+    take(10, Nil) === Nil
     
     String(take(1, o)) === '[1]'
     
     String(take(2, o)) === '[1]'
     
+    drop(0, Nil) === Nil
+    
+    drop(1, o) === Nil
+    
+    String(drop(2, take(5, nats))) === '[3,4,5]'
+    
     String(map(function(x){ return x*x; }, AList([1,2,3]))) === '[1,4,9]'
     
     map(function(){}, Nil) === Nil
+    
+    concatMap(function(){ return Nil; }, List([1,2,3])) === Nil
+    
+    String(concatMap(function(x){ return take(x, squares); }, List([1,2,3]))) === '[1,1,4,1,4,9]'
     
     String(filter(function(x){ return !(x%3); }, AList([1,2,3,4,5,6]))) === '[3,6]'
     
@@ -124,6 +178,10 @@
     foldl(function(acc, x){ return acc+x; }, 0, AList([1,2,3])) === 6
     
     foldr(function(x, acc){ return x-acc; }, 0, AList([1,2,3])) === 2
+    
+    foldl1(function(acc, x){ return acc+x; }, AList([1,2,3])) === 6
+    
+    foldr1(function(x, acc){ return x-acc; }, AList([1,2,3])) === 2
     
     foldl(function(){}, 5, Nil) === 5
     

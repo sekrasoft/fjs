@@ -6,6 +6,7 @@
 function ListBase() { throw new Error(); }
 ListBase.prototype.head = function() { throw new Error(); };
 ListBase.prototype.tail = function() { throw new Error(); };
+ListBase.prototype.isEmpty = function() { return false; };
 
 ListBase.prototype.length = function(){
   var t = this, len = 0;
@@ -14,6 +15,44 @@ ListBase.prototype.length = function(){
     ++ len;
   } while(t !== Nil);
   return len;
+};
+
+ListBase.prototype.indexOf = function(a){
+  var t = this, id = 0;
+  do {
+    if(t.head() === a) return id;
+    t = t.tail();
+    ++ id;
+  } while(t !== Nil);
+  return -1;
+};
+
+ListBase.prototype.last = function(){
+  var t = this, t1;
+  while(true) {
+    t1 = t.tail();
+    if(t1 === Nil) return t.head();
+    t = t1;
+  }
+};
+
+ListBase.prototype.init = function(){
+  var t = this.tail(), list = this;
+  
+  if(t === Nil) return Nil;
+  
+  return new LazyList(function(){ return list.head(); },
+    function(){ return t.init(); });
+};
+
+ListBase.prototype.drop = function(n){
+  var t = this;
+  while (n > 0) {
+    t = t.tail();
+    -- n;
+    if(t === Nil) return Nil;
+  }
+  return t;
 };
 
 ListBase.prototype.reverse = function(){
@@ -42,7 +81,7 @@ ListBase.prototype.take = function(n){
 
   return new LazyList(function(){ return list.head(); },
     function(){ return takeTail(n - 1, list); });
-}
+};
 
 ListBase.prototype.map = function(f){
   var list = this;
@@ -136,9 +175,14 @@ ListBase.prototype.toArray = function() {
 /// Пустой список
 function EmptyList(){ throw new Error(); }
 EmptyList.prototype = Object.create(ListBase.prototype);
+EmptyList.prototype.isEmpty = function() { return true; };
 EmptyList.prototype.length = function(){ return 0; };
+EmptyList.prototype.indexOf = function(){ return -1; };
 EmptyList.prototype.reverse = function(){ return this; };
+EmptyList.prototype.last = function(n){};
+EmptyList.prototype.init = function(n){};
 EmptyList.prototype.take = function(n){ return this; };
+EmptyList.prototype.drop = function(n){ return this; };
 EmptyList.prototype.map = function(f){ return this; };
 EmptyList.prototype.filter = function(f){ return this; };
 EmptyList.prototype.foldr = function(f, val){ return val; };
@@ -228,6 +272,19 @@ Sequence.prototype.tail = function() {
   return new Sequence(this.func, this.from + 1);
 };
 
+/// Список из повторяющегося n>0 раз элемента
+function Replicated(n, a){
+  this.a = a;
+  this.n = n;
+}
+
+Replicated.prototype = Object.create(ListBase.prototype);
+Replicated.prototype.head = function() { return this.a; };
+Replicated.prototype.tail = function() {
+  if(this.n > 1) return new Replicated(this.n - 1, this.a);
+  return Nil;
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // Основные функции и значения
 
@@ -241,6 +298,36 @@ function product(list){
   return list.foldl(function(acc, x){ return acc * x; }, 1);
 }
 
+function maximum(list){
+  return list.foldl(function(acc, x){ return Math.max(acc, x); }, Math.max());
+}
+
+function minimum(list){
+  return list.foldl(function(acc, x){ return Math.min(acc, x); }, Math.min());
+}
+
+function foldl1(f, list){
+  return list.tail().foldl(f, list.head());
+}
+
+function foldr1(f, list){
+  var s = list.toArray();
+  if(!s.length) return;
+  
+  var res = s[s.length - 1];
+  for(var i=s.length - 2; i>=0; --i) res = f(s[i], res);
+  return res;
+}
+
+function or(list){
+  var t = list;
+  while(t !== Nil){
+    if(t.head()) return true;
+    t = t.tail();
+  }
+  return false;
+}
+
 function any(f, list){
   var t = list;
   while(t !== Nil){
@@ -248,6 +335,15 @@ function any(f, list){
     t = t.tail();
   }
   return false;
+}
+
+function and(list){
+  var t = list;
+  while(t !== Nil){
+    if(!t.head()) return false;
+    t = t.tail();
+  }
+  return true;
 }
 
 function all(f, list){
@@ -274,6 +370,22 @@ function iterate(f, a){
   return new LazyList1(a, function(){ return iterate(f, f(a)); });
 }
 
+function repeat(a){
+  var list = new List(a, Nil);
+  list.t = list;
+  return list;
+}
+
+function replicate(n, a){
+  if(n <= 0) return Nil;
+  return new Replicated(n, a);
+}
+
+function cycle(list){
+  if(list === Nil) return;
+  return concat(repeat(list));
+}
+
 function shift(list){
   if(list === Nil) return Nil;
   return list.tail().concat(new List(list.head(), Nil));
@@ -283,6 +395,18 @@ function zipWith(f, xs, ys){
   if(xs === Nil || ys === Nil) return Nil;
   return new LazyList(function() { return f(xs.head(), ys.head()); },
     function() { return zipWith(f, xs.tail(), ys.tail()); });
+}
+
+function concatMap(f, list){
+  return concat(list.map(f));
+}
+
+function elem(a, list){
+  return list.indexOf(a) >= 0;
+}
+
+function notElem(a, list){
+  return list.indexOf(a) < 0;
 }
 
 function permutations(list){
@@ -344,8 +468,12 @@ var stdlib = {
       'head': function head(list){ return list.head(); },
       'tail': function tail(list){ return list.tail(); },
       'length': function length(list){ return list.length(); },
+      'isEmpty': function isEmpty(list){ return list.isEmpty(); },
+      'last': function last(list){ return list.last(); },
+      'init': function init(list){ return list.init(); },
       'reverse': function(list){ return list.reverse(); },
       'take': function(n, list){ return list.take(n); },
+      'drop': function(n, list){ return list.drop(n); },
       'map': function(f, list){ return list.map(f); },
       'filter': function(f, list){ return list.filter(f); },
       'foldr': function(f, val, list){ return list.foldr(f, val); },
@@ -356,15 +484,26 @@ var stdlib = {
       'sort': function(list){ return list.sort(); },
       'join': function(str, list){ return list.join(str); },
       
+      'foldl1': foldl1,
+      'foldr1': foldr1,
+      'concatMap': concatMap,
+      
+      'elem': elem,
+      'notElem': notElem,
       'sum': sum,
+      'maximum': maximum,
+      'minimum': minimum,
       'product': product,
       'any': any,
       'all': all,
+      'or': or,
+      'and': and,
       'concat': concat,
       'shift': shift,
       'zipWith': zipWith,
       'permutations': permutations,
-      'unique': unique
+      'unique': unique,
+      'cycle': cycle
     }
   },
   
@@ -378,7 +517,11 @@ var stdlib = {
     'field': function field(name){ return function(x){ return x[name]; }; },
     'curry': curry,
 
-    'iterate': iterate
+    'list': {
+      'iterate': iterate,
+      'repeat': repeat,
+      'replicate': replicate
+    }
   }
   
 };

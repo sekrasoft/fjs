@@ -71,10 +71,14 @@ Functions names are Haskell-like too.*
     - `Seq :: (Int -> a, Int) -> [a]` - creates list-like sequence [f(n), f(n+1), f(n+2), ...]
     - `util` - list operations
       - `head :: [a] -> a`
+      - `last :: [a] -> a`
       - `tail :: [a] -> [a]`
+      - `init :: [a] -> [a]`
       - `length :: [a] -> Number`
+      - `isEmpty :: [a] -> Boolean`
       - `reverse :: [a] -> [a]`
       - `take :: (Number, [a]) -> [a]`
+      - `drop :: (Number, [a]) -> [a]`
       - `map :: (a -> b, [a]) -> [b]`
       - `filter :: (a -> Boolean, [a]) -> [a]`
       - `foldr :: ((a,b)->b, b, [a]) -> b`
@@ -93,6 +97,17 @@ Functions names are Haskell-like too.*
       - `zipWith :: ((a,b) -> c, [a], [b]) -> [c]`
       - `permutations :: [a] -> [[a]]`
       - `unique :: [a] -> [a]`
+      - `cycle :: [a] -> [a]`
+      - `elem :: (a, [a]) -> Boolean`
+      - `notElem :: (a, [a]) -> Boolean`
+      - `maximum :: [a] -> a`
+      - `minimum :: [a] -> a`
+      - `and :: [Boolean] -> Boolean`
+      - `or  :: [Boolean] -> Boolean`
+      - `foldl1 :: ((a -> a -> a), [a]) -> a`
+      - `foldr1 :: ((a -> a -> a), [a]) -> a`
+      - `concatMap :: ((a -> [b]), [a]) -> [b]`
+      
     - `std` - some well-known infinite lists
       - `nats` - natural numbers
       - `squares` - squares of natural numbers
@@ -107,7 +122,10 @@ Functions names are Haskell-like too.*
     - `compose :: (b -> c, a -> b) -> a -> c`
     - `field :: String -> Object a -> a` - object field getter
     - `curry :: ((a, b) -> c) -> a -> b -> c`
-    - `iterate :: (a -> a, a) -> [a]`
+    - `list` - functions related with lists
+      - `iterate :: (a -> a, a) -> [a]`
+      - `repeat :: a -> [a]`
+      - `replicate :: (Number, a) -> [a]`
     - `operators` - a convenient operators and lambdas notation
         (see [operators](#operators))
       - `binary :: String -> (a -> a -> b) | (a -> b) | b`
@@ -119,10 +137,14 @@ All the lists has the following methods:
 *Some functions from the `list.util` are just wrappers on this methods.*
 
   - `head :: () -> a`
+  - `last :: () -> a`
   - `tail :: () -> [a]`
+  - `init :: () -> [a]`
+  - `isEmpty :: () -> Boolean`
   - `length :: () -> Number`
   - `reverse :: () -> [a]`
   - `take :: Number -> [a]`
+  - `drop :: Number -> [a]`
   - `map :: (a -> b) -> [b]`
   - `filter :: (a -> Boolean) -> [a]`
   - `foldr :: ((a,b)->b, b) -> b`
@@ -134,6 +156,7 @@ All the lists has the following methods:
   - `join :: String -> String`
   - `toString :: () -> String`
   - `toArray :: () -> Array a`
+  - `indexOf :: a -> Number`
 
 It's important to note that `head` and `tail` call results are **cached**
 to achieve higher perfomance. This does not interfere with the functional
@@ -193,7 +216,12 @@ The `fjs.$export` function allows you to add your value in an object:
 ## Example
 Please close you eyes while I import all the values in the global scope:
 
-    fjs.$import(this, [ 'list.*', 'list.util.*', 'func.*', 'list.std.*' ]);
+    fjs.$import(this, [
+      'list.*',
+      'list.util.*',
+      'list.std.*',
+      'func.*',
+      'func.list.*' ]);
 
 I cat still use the full names but it's so boring:
 
