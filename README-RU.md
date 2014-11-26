@@ -77,6 +77,8 @@ FJS предоставляет пользователю браузера объ�
       - `reverse :: [a] -> [a]`
       - `take :: (Number, [a]) -> [a]`
       - `drop :: (Number, [a]) -> [a]`
+      - `takeWhile :: (a -> Boolean, [a]) -> [a]`
+      - `dropWhile :: (a -> Boolean, [a]) -> [a]`
       - `map :: (a -> b, [a]) -> [b]`
       - `filter :: (a -> Boolean, [a]) -> [a]`
       - `foldr :: ((a,b)->b, b, [a]) -> b`

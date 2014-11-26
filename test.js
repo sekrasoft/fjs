@@ -21,7 +21,8 @@
 
   var o = Cons(1, Nil);
   var ntests = 0, nerrors = 0;
-  line(function(){/*
+  
+  var tests = line(function(){/*
   
     var _ = {};
     fjs.$import(_);
@@ -217,6 +218,18 @@
     
     String(take(3, Seq(function(x){ return x*2; }, 10))) === '[20,22,24]'
     
+    String(takeWhile(binary('< 3'), List([1,2,3,4,5]))) === '[1,2]'
+    
+    takeWhile(binary('< 3'), List([3,4,5])) === Nil
+    
+    String(dropWhile(binary('< 3'), List([1,2,3,4,5]))) === '[3,4,5]'
+    
+    dropWhile(binary('< 3'), List([1,2,2])) === Nil
+    
+    takeWhile(Const(true), Nil) === Nil
+    
+    dropWhile(Const(true), Nil) === Nil
+    
     String(shift(AList([1,2,3]))) === '[2,3,1]'
     
     shift(Nil) === Nil
@@ -295,7 +308,10 @@
     
   */}).split(/(\r\n|\r|\n){2,}/).filter(function(x){
     return !/^\s*$/.test(x);
-  }).forEach(function(code, i){
+  });
+  
+  console.time('TESTS');
+  tests.forEach(function(code, i){
     try {
       ++ ntests;
       // console.log('TEST: #' + (i+1), code);
@@ -310,6 +326,7 @@
       console.error(e.stack);
     }
   });
+  console.timeEnd('TESTS');
   
   testResult = [nerrors, ntests];
 

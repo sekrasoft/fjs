@@ -83,6 +83,22 @@ ListBase.prototype.take = function(n){
     function(){ return takeTail(n - 1, list); });
 };
 
+ListBase.prototype.takeWhile = function(f){
+  var list = this, h = this.head();
+  if(!f(h)) return Nil;
+  return new LazyList1(h, function(){ return list.tail().takeWhile(f); });
+};
+
+ListBase.prototype.dropWhile = function(f){
+  var t = this;
+  do {
+    var h = t.head();
+    if(!f(h)) return t;
+    t = t.tail();
+  } while(t !== Nil);
+  return t;
+};
+
 ListBase.prototype.map = function(f){
   var list = this;
   return new LazyList(function(){ return f(list.head()); },
@@ -182,7 +198,9 @@ EmptyList.prototype.reverse = function(){ return this; };
 EmptyList.prototype.last = function(n){};
 EmptyList.prototype.init = function(n){};
 EmptyList.prototype.take = function(n){ return this; };
+EmptyList.prototype.takeWhile = function(f){ return this; };
 EmptyList.prototype.drop = function(n){ return this; };
+EmptyList.prototype.dropWhile = function(f){ return this; };
 EmptyList.prototype.map = function(f){ return this; };
 EmptyList.prototype.filter = function(f){ return this; };
 EmptyList.prototype.foldr = function(f, val){ return val; };
@@ -479,7 +497,9 @@ var stdlib = {
       'init': function init(list){ return list.init(); },
       'reverse': function(list){ return list.reverse(); },
       'take': function(n, list){ return list.take(n); },
+      'takeWhile': function(f, list){ return list.takeWhile(f); },
       'drop': function(n, list){ return list.drop(n); },
+      'dropWhile': function(f, list){ return list.dropWhile(f); },
       'map': function(f, list){ return list.map(f); },
       'filter': function(f, list){ return list.filter(f); },
       'foldr': function(f, val, list){ return list.foldr(f, val); },
