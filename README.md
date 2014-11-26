@@ -59,7 +59,8 @@ A standard library contains the following submodules, functions and values:
 
 *All the types are given in a Haskell-like notation for easy understanding.
 (But sometimes dynamic typing breaks this convention)
-Functions names are Haskell-like too.*
+Functions names are Haskell-like too where it is possible.
+(see [Prelude documentation](https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.7.0.1/Prelude.html#g:11))*
 
   - `list` - list submodule
     - `Nil = []` - an empty list
