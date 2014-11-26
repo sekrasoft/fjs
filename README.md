@@ -65,7 +65,7 @@ Functions names are Haskell-like too.*
     - `Nil = []` - an empty list
     - `Cons :: (a, [a]) -> [a]`
     - `ConsL :: (a, () -> [a]) -> [a]` - semi-lazy list
-    - `ConsLL :: (() -> a), () -> [a]) -> [a]` - lazy constructor
+    - `ConsLL :: (() -> a, () -> [a]) -> [a]` - lazy constructor
     - `List :: Array a -> [a]` - JavaScript Array proxy
     - `AList :: Array a -> [a]` - copies a JavaScript Array
     - `Seq :: (Int -> a, Int) -> [a]` - creates list-like sequence [f(n), f(n+1), f(n+2), ...]
@@ -104,8 +104,8 @@ Functions names are Haskell-like too.*
       - `minimum :: [a] -> a`
       - `and :: [Boolean] -> Boolean`
       - `or  :: [Boolean] -> Boolean`
-      - `foldl1 :: ((a -> a -> a), [a]) -> a`
-      - `foldr1 :: ((a -> a -> a), [a]) -> a`
+      - `foldl1 :: (((a, a) -> a), [a]) -> a`
+      - `foldr1 :: (((a, a) -> a), [a]) -> a`
       - `concatMap :: ((a -> [b]), [a]) -> [b]`
       
     - `std` - some well-known infinite lists
@@ -128,7 +128,7 @@ Functions names are Haskell-like too.*
       - `replicate :: (Number, a) -> [a]`
     - `operators` - a convenient operators and lambdas notation
         (see [operators](#operators))
-      - `binary :: String -> (a -> a -> b) | (a -> b) | b`
+      - `binary :: String -> ((a, a) -> b) | (a -> b) | b`
       - `unary :: String -> (a -> b) | b`
       - `lambda :: String -> Function`
 
