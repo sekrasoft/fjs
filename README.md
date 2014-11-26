@@ -95,6 +95,7 @@ Functions names are Haskell-like too.*
       - `concat :: [[a]] -> [a]`
       - `shift :: [a] -> [a]`
       - `zipWith :: ((a,b) -> c, [a], [b]) -> [c]`
+      - `zipWith3 :: ((a,b,c) -> d, [a], [b], [c]) -> [d]`
       - `permutations :: [a] -> [[a]]`
       - `unique :: [a] -> [a]`
       - `cycle :: [a] -> [a]`

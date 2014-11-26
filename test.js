@@ -227,7 +227,9 @@
     
     String(permutations(AList([1,2]))) === '[[1,2],[2,1]]'
     
-    String(zipWith(function(x,y){ return x+y; }, AList([1,2]), AList([10,20,30,40]))) === '[11,22]'
+    String(zipWith(function(x,y){ return x+y; }, List([1,2]), List([10,20,30,40]))) === '[11,22]'
+    
+    String(zipWith3(function(x,y,z){ return x+y+z; }, List([1,8]), List([1,2]), List([10,20,30,40]))) === '[12,30]'
     
     sort(Nil) === Nil
     

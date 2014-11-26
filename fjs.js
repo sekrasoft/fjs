@@ -397,6 +397,12 @@ function zipWith(f, xs, ys){
     function() { return zipWith(f, xs.tail(), ys.tail()); });
 }
 
+function zipWith3(f, xs, ys, zs){
+  if(xs === Nil || ys === Nil || zs === Nil) return Nil;
+  return new LazyList(function() { return f(xs.head(), ys.head(), zs.head()); },
+    function() { return zipWith3(f, xs.tail(), ys.tail(), zs.tail()); });
+}
+
 function concatMap(f, list){
   return concat(list.map(f));
 }
@@ -501,6 +507,7 @@ var stdlib = {
       'concat': concat,
       'shift': shift,
       'zipWith': zipWith,
+      'zipWith3': zipWith3,
       'permutations': permutations,
       'unique': unique,
       'cycle': cycle
